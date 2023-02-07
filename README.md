@@ -11,5 +11,5 @@ Set the amount of maximal hiddenlayers and maximal neurons per layer.
 The number of training epochs can also be set, but later an early stopping is used, so event though it is set to 500, 
 the evaluation will most probably stop at a smaller epoch count. 
 
-# genetic algorithm constants
+### genetic algorithm constants
 The number of generations as well as the population size can be defined here
