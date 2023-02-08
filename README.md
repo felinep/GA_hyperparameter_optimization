@@ -1,15 +1,33 @@
 # GA_hyperparameter_optimization
 Hyperparameter optimization using genetic algorihms.
 
-## algorihm constants that can be set in the (scripts/)main.py file:
-### amount of data
-Amount of data used to train and validate the network individuums
+## Usage:
+Add data into the /data folder. 
+Pickled data will be stored in the pickled_data folder and videos inside the video folder. 
 
-### mlp setup constants
-Set the amount of maximal hiddenlayers and maximal neurons per layer. 
+The algorithm will be started by running:
 
-The number of training epochs can also be set, but later an early stopping is used, so event though it is set to 500, 
-the evaluation will most probably stop at a smaller epoch count. 
+python
+~/GA_hyperparameter_optimization/scripts/main.py 
+[-h] 
+--dataset_number DATASET_NUMBER --num_generations NUM_GENERATIONS --population_size POPULATION_SIZE [--data_count DATA_COUNT] [--max_neurons_per_layer MAX_NEURONS_PER_LAYER]
+               [--max_hiddenlayers MAX_HIDDENLAYERS] [--save_prefix SAVE_PREFIX]
 
-### genetic algorithm constants
-The number of generations as well as the population size can be defined here
+## Required arguments:
+dataset number: Number of the dataset that should be used (1 for random1 etc.).
+
+num generations: The number of generations the algorithm should run for.
+
+population size: The amount of MLP-indviduums in a population.
+
+## Optional arguments:
+help: show this help message and exit
+
+data count: Amount of data used to train and validate the network individuums (default: 5000)
+
+max neuros per layer: Maximal amount of neurons in a hiddenlayer.
+
+max hiddenlayers: Maximal amount of hidden layers.
+
+save prefix: Add a save-prefix for the generated data saves.
+
