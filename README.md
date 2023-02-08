@@ -6,6 +6,7 @@ Add data into the /data folder.
 Pickled data will be stored in the pickled_data folder and videos inside the video folder. 
 
 The algorithm will be started by running:
+
 $ python ~/GA_hyperparameter_optimization/scripts/main.py [-h] --dataset_number DATASET_NUMBER --num_generations NUM_GENERATIONS --population_size POPULATION_SIZE [--data_count DATA_COUNT] [--max_neurons_per_layer MAX_NEURONS_PER_LAYER]
                [--max_hiddenlayers MAX_HIDDENLAYERS] [--save_prefix SAVE_PREFIX]
 
