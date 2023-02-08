@@ -3,10 +3,17 @@ from keras.callbacks import EarlyStopping
 import numpy as np
 import string
 import tensorflow as tf
+from keras.layers.core import Activation
+from keras import backend
+
+# activation function: tanh(x/2)
+def tanh(x):
+    return backend.tanh(x/2)
 
 def create_MLP_from_parameter(parameter : np.array(int), metric : string = 'accuracy'):
     num_neurons_per_layer = parameter 
     fitness_value: float
+    activation_function = Activation(tanh)
 
     num_neurons_per_layer_without_zeros = num_neurons_per_layer[num_neurons_per_layer != 0]
 
@@ -15,7 +22,7 @@ def create_MLP_from_parameter(parameter : np.array(int), metric : string = 'accu
         tf.keras.layers.Dense(
             max(int(num_neurons_per_layer_without_zeros[0]), 1),
             input_shape = (27,),  
-            activation='relu')
+            activation=activation_function)
     ])
 
     if (len(num_neurons_per_layer_without_zeros != 0)):
@@ -24,11 +31,11 @@ def create_MLP_from_parameter(parameter : np.array(int), metric : string = 'accu
             cnn_model.add(
                 tf.keras.layers.Dense(
                     num_neurons,
-                    activation = 'relu'))
+                    activation = activation_function))
 
     cnn_model.add(tf.keras.layers.Dense(
         2, 
-        activation = 'softmax'))
+        activation = activation_function))
 
     # Specify the loss fuction, optimizer, metrics
     cnn_model.compile(
@@ -52,12 +59,11 @@ def evaluate_MLP(cnn_model, model_paramter, input_data, target_data, metric : st
 
     weights = cnn_model.get_weights()
     amount_small_weights = len(np.where(abs(weights[0]) < weight_thresh)[0])
-    amount_small_bias = len(np.where(abs(weights[0]) < weight_thresh)[1])
 
     if (verbose):
-        print (f"acc: {last_result:0.02f}, sum: {np.sum(model_paramter)}, deadW_c: {amount_small_bias + amount_small_weights}, parameter: {model_paramter}")
+        print (f"acc: {last_result:0.02f}, sum: {np.sum(model_paramter)}, deadW_c: {amount_small_weights}, parameter: {model_paramter}")
     
-    return -last_result, np.sum(model_paramter), (amount_small_bias + amount_small_weights), (0.92 - (last_result))
+    return -last_result, np.sum(model_paramter), (amount_small_weights), (0.92 - (last_result))
 
 class ProblemMLP_Optimization(ElementwiseProblem):
     def __init__(self, max_hiddenlayers : int, max_neuron_per_layer : int, input_data, target_data, verbose: bool = False):

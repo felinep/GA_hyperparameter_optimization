@@ -7,6 +7,7 @@ from datetime import date
 from typing import *
 import pickle
 import os
+import argparse
 
 # import the initial population sample class(returns a population object where the individuals are MLP parameters,
 # variant in the number of neurons and the amount of hidden layers).
@@ -26,25 +27,9 @@ from pymoo_implementation.problem.problem_mlp_optimization import ProblemMLP_Opt
 # imports visualization functionality for the optimazation progress
 from pymoo_implementation.visualization.visualization_mlp_optimization import store_video
 
-# Data constants
-PC_NAME = "test"
-
-DATA_COUNT = 100
-
-# mlp setup constants
-MAX_HIDDENLAYERS = 10
-MAX_NEURON_PER_LAYER = 300
-NUM_EPOCHS = 500 # uses early-stop anyways!
-
-# genetic algorithm constants
-GEN_STEP_SIZE = 1 #100 #min 2, step size instead of complete number of generations
-POPULATION_SIZE = 5 #250
-
-# Random seed
+# Global constants:
 RANDOM_SEED = 42
-
 METRIC = "accuracy"
-
 VERBOSE = True
 
 PATH = f"{os.getcwd()}/GA_hyperparameter_optimization/" 
@@ -112,7 +97,7 @@ def run_and_store(pickle_name_result, pickle_name_pop, video_name, target, input
 
 
 def dataset_random(dataset_number : int):
-    pickle_name_result, pickle_name_pop, video_name, target, input = define_dataset_constants(f"new{dataset_number}", dataset_number)
+    pickle_name_result, pickle_name_pop, video_name, target, input = define_dataset_constants(f"set{dataset_number}", dataset_number)
 
     run_and_store(
         pickle_name_result=pickle_name_result, 
@@ -122,11 +107,73 @@ def dataset_random(dataset_number : int):
         input=input, 
         verbose= VERBOSE
     )
+def parse_input_arguments(argv=None):
+    parser = argparse.ArgumentParser(description='Genetic Algorithm for Hyperparameter Optimization')
+    required = parser.add_argument_group('required arguments')
 
+    required.add_argument("--dataset_number", "-ds", 
+                        help="display a square of a given number",
+                        type=int, 
+                        required=True)
+
+    required.add_argument("--num_generations", "-ng", 
+                        help="display a square of a given number",
+                        type=int, 
+                        required=True)
+
+    required.add_argument("--population_size", "-ps", 
+                        help="display a square of a given number",
+                        type=int, 
+                        required=True)
+
+    parser.add_argument("--data_count", "-dc", 
+                        help="display a square of a given number",
+                        type=int, 
+                        default=5000)
+
+    parser.add_argument("--max_neurons_per_layer", "-mnpl", 
+                        help="display a square of a given number",
+                        type=int, 
+                        default = 300)
+
+    parser.add_argument("--max_hiddenlayers", "-mh", 
+                        help="display a square of a given number",
+                        type=int, 
+                        default = 10)
+
+    parser.add_argument("--save_prefix", "-sp", 
+                        help="display a square of a given number",
+                        type=str, 
+                        default = "GA")
+    
+    groups_order = {
+        'positional arguments': 0,
+        'required arguments': 1,
+        'optional arguments': 2
+    }
+    parser._action_groups.sort(key=lambda g: groups_order[g.title])
+
+    return parser.parse_args()
 
 def main(args=None):
-    dataset_random(1)
+    dataset_random(DATASET_NUMBER)
 
 
 if __name__ == '__main__':
+    args = parse_input_arguments()
+
+    DATASET_NUMBER =     args.dataset_number
+    DATA_COUNT =         args.data_count
+    GEN_STEP_SIZE =      args.num_generations
+    POPULATION_SIZE =    args.population_size
+    PC_NAME =            args.save_prefix
+    MAX_HIDDENLAYERS =   args.max_hiddenlayers
+    MAX_NEURON_PER_LAYER=args.max_neurons_per_layer
+
+    # uses Early-Stopping, the training will most probably stop before reaching 500 epochs
+    NUM_EPOCHS = 500
+  
+    print ("\n", "-" * 105, f"\nStarting the GA using {DATA_COUNT} instances of data from dataset {1}, a population size of {POPULATION_SIZE} and {GEN_STEP_SIZE} generations.")
+    print (f"Each indivial MLP will have maximal {MAX_NEURON_PER_LAYER} neurons per layer and maximal {MAX_HIDDENLAYERS} hidden layers.\n", "-" * 105, "\n")
+
     main()
