@@ -46,7 +46,7 @@ def create_MLP_from_parameter(parameter : np.array(int), metric : string = 'accu
     )
     return cnn_model
     
-def evaluate_MLP(cnn_model, model_paramter, input_data, target_data, metric : string = 'accuracy', verbose: bool = False, weight_thresh = 0.25, min_acc = 0.92 ):
+def evaluate_MLP(cnn_model, model_paramter, input_data, target_data, metric : string = 'accuracy', verbose: bool = False, weight_thresh = 0.05, min_acc = 0.92 ):
 
     # add early stopping callback to save time
     es = EarlyStopping(monitor = f'val_{metric}', mode ='max', patience = 5)
