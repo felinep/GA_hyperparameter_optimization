@@ -58,12 +58,12 @@ def evaluate_MLP(cnn_model, model_paramter, input_data, target_data, metric : st
     last_result = history.history[f"val_{metric}"][-1:][0]
 
     weights = cnn_model.get_weights()
-    amount_small_weights = len(np.where(abs(weights[0]) < weight_thresh)[0])
+    amount_dead_weights = len(np.where(abs(weights[0]) < weight_thresh)[0])
 
     if (verbose):
-        print (f"acc: {last_result:0.02f}, sum: {np.sum(model_paramter)}, deadW_c: {amount_small_weights}, parameter: {model_paramter}")
+        print (f"acc: {last_result:0.02f}, sum: {np.sum(model_paramter)}, deadW_c: {amount_dead_weights}, parameter: {model_paramter}")
     
-    return -last_result, np.sum(model_paramter), (amount_small_weights), (0.92 - (last_result))
+    return -last_result, np.sum(model_paramter), (amount_dead_weights), (0.92 - (last_result))
 
 class ProblemMLP_Optimization(ElementwiseProblem):
     def __init__(self, max_hiddenlayers : int, max_neuron_per_layer : int, input_data, target_data, verbose: bool = False):

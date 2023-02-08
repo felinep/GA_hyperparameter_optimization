@@ -108,43 +108,43 @@ def dataset_random(dataset_number : int):
         verbose= VERBOSE
     )
 def parse_input_arguments(argv=None):
-    parser = argparse.ArgumentParser(description='Genetic Algorithm for Hyperparameter Optimization')
+    parser = argparse.ArgumentParser(description='Hyperparameter optimization using genetic algorihms.')
     required = parser.add_argument_group('required arguments')
 
     required.add_argument("--dataset_number", "-ds", 
-                        help="display a square of a given number",
+                        help="Number of the dataset that should be used (1 for random1 etc.).",
                         type=int, 
                         required=True)
 
     required.add_argument("--num_generations", "-ng", 
-                        help="display a square of a given number",
+                        help="The number of generations the algorithm should run for.",
                         type=int, 
                         required=True)
 
     required.add_argument("--population_size", "-ps", 
-                        help="display a square of a given number",
+                        help="The amount of MLP-indviduums in a population.",
                         type=int, 
                         required=True)
 
     parser.add_argument("--data_count", "-dc", 
-                        help="display a square of a given number",
+                        help="Amount of data used to train and validate the network individuums, default: 5000",
                         type=int, 
                         default=5000)
 
     parser.add_argument("--max_neurons_per_layer", "-mnpl", 
-                        help="display a square of a given number",
+                        help="Maximal amount of neurons in a hiddenlayer, default: 300",
                         type=int, 
                         default = 300)
 
     parser.add_argument("--max_hiddenlayers", "-mh", 
-                        help="display a square of a given number",
+                        help="Maximal amount of hidden layers, default: 10",
                         type=int, 
                         default = 10)
 
     parser.add_argument("--save_prefix", "-sp", 
-                        help="display a square of a given number",
+                        help="Add a save-prefix for the generated data saves.",
                         type=str, 
-                        default = "GA")
+                        default = "")
     
     groups_order = {
         'positional arguments': 0,
@@ -175,5 +175,5 @@ if __name__ == '__main__':
   
     print ("\n", "-" * 105, f"\nStarting the GA using {DATA_COUNT} instances of data from dataset {1}, a population size of {POPULATION_SIZE} and {GEN_STEP_SIZE} generations.")
     print (f"Each indivial MLP will have maximal {MAX_NEURON_PER_LAYER} neurons per layer and maximal {MAX_HIDDENLAYERS} hidden layers.\n", "-" * 105, "\n")
-
+    
     main()

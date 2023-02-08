@@ -1,3 +1,9 @@
 data/random1
 data/random2
 data/random3
+scripts/pymoo_implementation/crossover/__pycache__/crossover_mlp_optimization.cpython-38.pyc
+scripts/pymoo_implementation/mutation/__pycache__/mutation_mlp_optimization.cpython-38.pyc
+scripts/pymoo_implementation/visualization/__pycache__/visualization_mlp_optimization.cpython-38.pyc
+scripts/pymoo_implementation/population/__pycache__/population_sorting.cpython-38.pyc
+scripts/pymoo_implementation/population/__pycache__/sampling_mlp_optimization.cpython-38.pyc
+scripts/pymoo_implementation/problem/__pycache__/problem_mlp_optimization.cpython-38.pyc
