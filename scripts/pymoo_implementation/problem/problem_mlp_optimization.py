@@ -45,7 +45,7 @@ def create_MLP_from_parameter(parameter : np.array(int), metric : string = 'accu
         metrics = [metric]
     )
     return cnn_model
-    
+
 def evaluate_MLP(cnn_model, model_paramter, input_data, target_data, metric : string = 'accuracy', verbose: bool = False, weight_thresh = 0.05, min_acc = 0.92 ):
 
     # add early stopping callback to save time
@@ -58,7 +58,10 @@ def evaluate_MLP(cnn_model, model_paramter, input_data, target_data, metric : st
     last_result = history.history[f"val_{metric}"][-1:][0]
 
     weights = cnn_model.get_weights()
-    amount_dead_weights = len(np.where(abs(weights[0]) < weight_thresh)[0])
+    amount_dead_weights = 0
+    for layer in cnn_model.layers:
+        weights = layer.get_weights()
+        amount_dead_weights = amount_dead_weights + len(np.where(abs(weights[0]) < weight_thresh)[0])
 
     if (verbose):
         print (f"acc: {last_result:0.02f}, sum: {np.sum(model_paramter)}, deadW_c: {amount_dead_weights}, parameter: {model_paramter}")
