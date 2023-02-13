@@ -46,7 +46,7 @@ def create_MLP_from_parameter(parameter : np.array(int), metric : string = 'accu
     )
     return cnn_model
 
-def evaluate_MLP(cnn_model, model_paramter, input_data, target_data, metric : string = 'accuracy', verbose: bool = False, weight_thresh = 0.05, min_acc = 0.92 ):
+def evaluate_MLP(cnn_model, model_parameter, input_data, target_data, metric : string = 'accuracy', verbose: bool = False, weight_thresh = 0.05, bias_thresh = 0.05, min_acc = 0.90 ):
 
     # add early stopping callback to save time
     es = EarlyStopping(monitor = f'val_{metric}', mode ='max', patience = 5)
@@ -59,14 +59,20 @@ def evaluate_MLP(cnn_model, model_paramter, input_data, target_data, metric : st
 
     weights = cnn_model.get_weights()
     amount_dead_weights = 0
+            
     for layer in cnn_model.layers:
         weights = layer.get_weights()
-        amount_dead_weights = amount_dead_weights + len(np.where(abs(weights[0]) < weight_thresh)[0])
+        # per default 5%
+        #weight_thresh = np.mean(np.abs(weights[0])) * weight_thresh_factor
+        # per default 10 % 
+        #bias_thresh = np.mean(np.abs(weights[1])) * bias_thresh_factor
+        # sum of all weights that are in the smallest 5% and biases that are in the smallest 10% of the layer weight distribution
+        amount_dead_weights = amount_dead_weights + len(np.where(abs(weights[0]) < weight_thresh)[0]) + len(np.where(abs(weights[1] < bias_thresh)[0]))
 
     if (verbose):
-        print (f"acc: {last_result:0.02f}, sum: {np.sum(model_paramter)}, deadW_c: {amount_dead_weights}, parameter: {model_paramter}")
-    
-    return -last_result, np.sum(model_paramter), (amount_dead_weights), (0.92 - (last_result))
+        print (f"acc: {last_result:0.02f}, sum: {np.sum(model_parameter)}, deadW_c: {amount_dead_weights}, parameter: {model_parameter}")
+    # TODO readd sum?
+    return -last_result, np.sum(model_parameter), (amount_dead_weights), (min_acc - (last_result))
 
 class ProblemMLP_Optimization(ElementwiseProblem):
     def __init__(self, max_hiddenlayers : int, max_neuron_per_layer : int, input_data, target_data, verbose: bool = False):
