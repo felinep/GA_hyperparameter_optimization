@@ -16,7 +16,9 @@ def create_MLP_from_parameter(parameter : np.array(int), metric : string = 'accu
     activation_function = Activation(tanh)
 
     num_neurons_per_layer_without_zeros = num_neurons_per_layer[num_neurons_per_layer != 0]
-
+    if (len(num_neurons_per_layer_without_zeros) == 0):
+        num_neurons_per_layer_without_zeros = [1]
+        
     # create model: 
     cnn_model = tf.keras.models.Sequential([
         tf.keras.layers.Dense(
